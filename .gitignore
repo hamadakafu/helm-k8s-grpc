@@ -1,2 +1,4 @@
 *secret.yaml
 *values.yaml
+!_enc_secret.yaml
+!_enc_values.yaml
