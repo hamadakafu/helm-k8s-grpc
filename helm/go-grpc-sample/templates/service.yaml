@@ -10,3 +10,19 @@ spec:
   - name: db-port
     port: 5432 
     targetPort: 5432
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ include "helper.name" . }}-service
+spec:
+  type: LoadBalancer
+  ports:
+    - name: grpc-port
+      port: {{ .Values.grpcPort }}
+      targetPort: {{ .Values.grpcPort }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "helper.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
