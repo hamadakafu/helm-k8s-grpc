@@ -72,9 +72,9 @@ steps:
       - '--key'
       - '${_KEY}'
       - '--ciphertext-file'
-      - 'helm/go-grpc-sample/values.yaml.enc'
-      - '--plaintext-file'
       - 'helm/go-grpc-sample/_enc_values.yaml'
+      - '--plaintext-file'
+      - 'helm/go-grpc-sample/values.yaml'
     waitFor: ['-']
 
   - name: 'gcr.io/cloud-builders/gcloud'
