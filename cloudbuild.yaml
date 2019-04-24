@@ -29,10 +29,16 @@ steps:
     waitFor: ['pull-app']
 
   - name: 'gcr.io/cloud-builders/docker'
-    id: 'push-app-image'
+    id: 'push-app-image-revision-id'
     args:
       - 'push' 
       - '${_DOCKER_USERNAME}/go-grpc-sample:${REVISION_ID}'
+    waitFor: ['build-app', 'docker-login']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'push-app-image-latest'
+    args:
+      - 'push' 
       - '${_DOCKER_USERNAME}/go-grpc-sample:latest'
     waitFor: ['build-app', 'docker-login']
 
@@ -91,4 +97,4 @@ steps:
       - '--set' 
       - 'grpcImageTag=${REVISION_ID}'
       - 'helm/go-grpc-sample'
-    waitFor: ['docker-login', 'push-app-image', 'get-credentials', 'decrypt-helm-values', 'decrypt-helm-secret']
+    waitFor: ['docker-login', 'push-app-image-revision-id', 'get-credentials', 'decrypt-helm-values', 'decrypt-helm-secret']
