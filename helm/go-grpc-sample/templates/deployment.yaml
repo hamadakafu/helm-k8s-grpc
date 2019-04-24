@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "helper.name" . }}-deployment
+  labels:
+    app.kubernetes.io/name: {{ include "helper.name" . }}
+    helm.sh/chart: {{ include "helper.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "helper.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      name: {{ include "helper.name" . }}-pod
+      labels:
+        app.kubernetes.io/name: {{ include "helper.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      imagePullSecrets:
+        - name: dockerhub-credential
+      containers:
+      - name: {{ include "helper.name" . }}-container
+        ports:
+          - containerPort: {{ .Values.grpcPort }}
+        livenessProbe:
+          tcpSocket:
+            port: {{ .Values.grpcPort }}
+          initialDelaySeconds: 5
+          periodSeconds: 10 
+        readinessProbe:
+          tcpSocket:
+            port: {{ .Values.grpcPort }}
+          initialDelaySeconds: 5
+          periodSeconds: 10 
+        image: "{{ .Values.grpcImageRepository }}:{{ .Values.grpcImageTag }}"
+        imagePullPolicy: IfNotPresent 
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+        envFrom:
+          - configMapRef:
+              name: postgres-config
+          - configMapRef:
+              name: grpc-server-config
+          - secretRef:
+              name: postgres-credential

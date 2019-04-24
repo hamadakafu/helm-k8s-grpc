@@ -1,0 +1,59 @@
+syntax = "proto3";
+package api;
+
+message Book {
+    int64 id = 1;
+    string title = 2;
+    string author = 3;
+    string description = 4;
+    int64 pages = 5;
+    int64 price = 6;
+}
+
+message CreateRequest {
+    Book book = 1;
+}
+
+message CreateResponse {
+    int64 id = 1;
+}
+
+message GetRequest {
+    int64 id = 1;
+}
+
+message GetResponse {
+    Book book = 1;
+}
+
+message UpdateRequest {
+    Book book = 1;
+}
+
+message UpdateResponce {
+    // 更新件数
+    int64 updated = 1;
+}
+
+message DeleteRequest {
+    int64 id = 1;
+}
+
+message DeleteResponse {
+    // 削除件数 
+    int64 deleted = 1;
+}
+
+message GetAllRequest {}
+
+message GetAllResponse {
+    repeated Book books = 1;
+}
+
+service BookService {
+    rpc Create(CreateRequest) returns (CreateResponse);
+    rpc Get(GetRequest) returns (GetResponse);
+    rpc Update(UpdateRequest) returns (UpdateResponce);
+    rpc Delete(DeleteRequest) returns (DeleteResponse);
+    rpc GetAll(GetAllRequest) returns (GetAllResponse);
+}

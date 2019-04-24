@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Values.postgresHost }}
+spec:
+  selector:
+    app: db
+  type: ClusterIP
+  ports:
+  - name: db-port
+    port: 5432 
+    targetPort: 5432
