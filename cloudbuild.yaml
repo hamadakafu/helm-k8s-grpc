@@ -88,7 +88,7 @@ steps:
       - '--project=${PROJECT_ID}'
     waitFor: ['-']
 
-  - name: 'gcr.io/cloud-builders-community/helm'
+  - name: 'docker.io/${_DOCKER_USERNAME}/helm'
     id: 'helm-install'
     args:
       - 'install' 
